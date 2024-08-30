@@ -14,5 +14,6 @@ import { BattleModule } from './battle/battle.module';
     PokemonModule,
     BattleModule,
   ],
+  
 })
 export class AppModule {}

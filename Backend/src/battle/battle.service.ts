@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Battle } from './battle.entity';
 import { Repository } from 'typeorm';
@@ -16,6 +16,13 @@ export class BattleService {
     async battle(pokemon1Id: string, pokemon2Id: string): Promise<Battle> {
         const pokemon1 = await this.pokemonService.findById(pokemon1Id);
         const pokemon2 = await this.pokemonService.findById(pokemon2Id);
+
+        if (!pokemon1) {
+            throw new NotFoundException(`Pokemon with ID ${pokemon1Id} not found`);
+        }
+        if (!pokemon2) {
+            throw new NotFoundException(`Pokemon with ID ${pokemon2Id} not found`);
+        }
 
         //logica de batalla
         const battleLog = [];
