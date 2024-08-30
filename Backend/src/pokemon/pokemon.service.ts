@@ -79,4 +79,8 @@ export class PokemonService implements OnModuleInit {
         return this.pokemonRepository.find();
     }
 
+    findById(id: string): Promise<Pokemon> {
+      return this.pokemonRepository.findOne({ where: { id } });
+  }
+
 }

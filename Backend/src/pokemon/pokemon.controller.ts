@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import { PokemonService } from './pokemon.service';
 import { Pokemon } from './pokemon.entity';
 
@@ -10,5 +10,10 @@ export class PokemonController {
     @Get()
     findAll(): Promise<Pokemon[]>{
         return this.pokemonService.findall();
+    }
+
+    @Get(':id')
+    findById(@Param('id') id: string): Promise<Pokemon>{
+        return this.pokemonService.findById(id);
     }
 }

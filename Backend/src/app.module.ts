@@ -9,10 +9,10 @@ import { BattleModule } from './battle/battle.module';
       type: 'sqlite',
       database: 'pokemon.db',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: true, // Esto es para desarrollo, en producción deberías usar migraciones
+      synchronize: false,
     }),
     PokemonModule,
-    BattleModule
+    BattleModule,
   ],
 })
 export class AppModule {}
