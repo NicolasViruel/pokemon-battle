@@ -4,26 +4,28 @@ import { Container, Grid, Card, CardMedia, CardContent, Typography, Button, Box 
 const App = () => {
   const [pokemonList, setPokemonList] = useState([]);
   const [selectedPokemon, setSelectedPokemon] = useState(null);
+  const [opponent, setOpponent] = useState(null);
   const [battleResult, setBattleResult] = useState(null);
 
-  // Obtener la lista de Pokémon desde el backend
   useEffect(() => {
-    fetch('http://localhost:3000/pokemon')
+    fetch('http://localhost:4000/pokemon')
       .then(response => response.json())
       .then(data => setPokemonList(data));
   }, []);
 
-  // Función para iniciar la batalla
   const startBattle = (pokemonId) => {
     const opponent = pokemonList[Math.floor(Math.random() * pokemonList.length)];
 
-    // Asegurarnos de que el contrincante sea diferente al Pokémon seleccionado
+    // Verifica que no sea contra el mismo Pokémon seleccionado
     if (opponent.id === pokemonId) {
-      startBattle(pokemonId); // Si son iguales, seleccionamos otro oponente
+      startBattle(pokemonId);
       return;
     }
 
-    fetch('http://localhost:3000/battle', {
+    setSelectedPokemon(pokemonId);
+    setOpponent(opponent);
+
+    fetch('http://localhost:4000/battle', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ pokemon1Id: pokemonId, pokemon2Id: opponent.id }),
@@ -35,26 +37,19 @@ const App = () => {
 
   return (
     <Container>
-      <Typography variant="h4" gutterBottom>
+      <Typography variant="h2" gutterBottom >
         Pokémon Battle
       </Typography>
-      {battleResult && (
-        <Box mb={2}>
-          <Typography variant="h6" color="primary">
-            {battleResult.winner} es el ganador!
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            {battleResult.log}
-          </Typography>
-        </Box>
-      )}
-      <Grid container spacing={2}>
+      <Typography variant="h4" gutterBottom color="primary">
+        Select your Pokémon
+      </Typography>
+      <Grid container spacing={2} justifyContent="center">
         {pokemonList.map(pokemon => (
-          <Grid item xs={12} sm={6} md={4} key={pokemon.id}>
+          <Grid item xs={12} sm={6} md={4} lg={2} key={pokemon.id}>
             <Card>
               <CardMedia
                 component="img"
-                height="140"
+                height="200"
                 image={pokemon.imageUrl}
                 alt={pokemon.name}
               />
@@ -71,17 +66,77 @@ const App = () => {
                 <Button
                   variant="contained"
                   color="primary"
+                  fullWidth
                   onClick={() => startBattle(pokemon.id)}
                 >
-                  Batallar
+                  Battle
                 </Button>
               </CardContent>
             </Card>
           </Grid>
         ))}
       </Grid>
+      
+      {battleResult && selectedPokemon && opponent && (
+        <Box mt={4}>
+          <Typography variant="h6" color="primary">
+            Batalla entre {pokemonList.find(p => p.id === selectedPokemon)?.name} y {opponent.name}
+          </Typography>
+          <Grid container spacing={10} justifyContent="center">
+            <Grid item xs={12} sm={6} md={4}>
+              <Card>
+                <CardMedia
+                  component="img"
+                  height="300"
+                  image={pokemonList.find(p => p.id === selectedPokemon)?.imageUrl}
+                  alt={pokemonList.find(p => p.id === selectedPokemon)?.name}
+                />
+                <CardContent>
+                  <Typography gutterBottom variant="h5">
+                    {pokemonList.find(p => p.id === selectedPokemon)?.name}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Attack: {pokemonList.find(p => p.id === selectedPokemon)?.attack} <br />
+                    Defense: {pokemonList.find(p => p.id === selectedPokemon)?.defense} <br />
+                    HP: {pokemonList.find(p => p.id === selectedPokemon)?.hp} <br />
+                    Speed: {pokemonList.find(p => p.id === selectedPokemon)?.speed}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+            <Grid item xs={12} sm={6} md={4}>
+              <Card>
+                <CardMedia
+                  component="img"
+                  height="300"
+                  image={opponent.imageUrl}
+                  alt={opponent.name}
+                />
+                <CardContent>
+                  <Typography gutterBottom variant="h5">
+                    {opponent.name}
+                  </Typography>
+                  <Typography variant="body2 h2" color="text.secondary">
+                    Attack: {opponent.attack} <br />
+                    Defense: {opponent.defense} <br />
+                    HP: {opponent.hp} <br />
+                    Speed: {opponent.speed}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+          </Grid>
+          <Typography variant="h4" color="primary" mt={2}>
+            {battleResult.winner} es el ganador!
+          </Typography>
+          <Typography variant="body2 h2" color="text.secondary">
+            {battleResult.log}
+          </Typography>
+        </Box>
+      )}
     </Container>
   );
 };
 
 export default App;
+

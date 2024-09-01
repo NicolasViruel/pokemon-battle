@@ -6,12 +6,15 @@ import { Pokemon } from 'src/pokemon/pokemon.entity';
 import { PokemonService } from 'src/pokemon/pokemon.service';
 
 @Injectable()
+
 export class BattleService {
+    
     constructor(
         @InjectRepository(Battle)
         private battleRepository: Repository<Battle>,
         private pokemonService: PokemonService,
     ){}
+    
 
     async battle(pokemon1Id: string, pokemon2Id: string): Promise<Battle> {
         const pokemon1 = await this.pokemonService.findById(pokemon1Id);
@@ -22,6 +25,28 @@ export class BattleService {
         }
         if (!pokemon2) {
             throw new NotFoundException(`Pokemon with ID ${pokemon2Id} not found`);
+        }
+
+        const typeAdvantages = {
+            Electric: ['Water', 'Flying'],
+            Fire: ['Grass', 'Bug'],
+            Water: ['Fire', 'Ground', 'Rock'],
+            Grass: ['Water', 'Ground', 'Rock'],
+            Normal: []
+        };
+
+        function calculateDamage(attacker: Pokemon, defender: Pokemon): number {
+            let damage = attacker.attack - defender.defense;
+          
+            // daño mínimo primero
+            damage = Math.max(damage, 1);
+          
+            // si hay ventaja de tipo
+            if (typeAdvantages[attacker.type]?.includes(defender.type)) {
+              damage *= 2; // doble daño
+            }
+          
+            return damage;
         }
 
         //logica de batalla
@@ -40,12 +65,12 @@ export class BattleService {
         }
 
         while (pokemon1.hp > 0 && pokemon2.hp > 0) {
-            const damage = Math.max(first.attack - second.attack, 1);
-            second.hp -=damage;
+            const damage = calculateDamage(first, second);
+            second.hp -= damage;
             battleLog.push(`${first.name} hit ${second.name} for ${damage} damage.`);
-
+            
             [first, second] = [second, first];
-        }
+          }
 
         const winner = pokemon1.hp > 0 ? pokemon1 : pokemon2;
 
@@ -59,4 +84,8 @@ export class BattleService {
         return this.battleRepository.save(battle);
     }
 
+        
+    
+
 }
+

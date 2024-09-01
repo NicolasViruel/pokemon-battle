@@ -1,13 +1,13 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-  export class SeedPokemon1725037443778 implements MigrationInterface {
-      public async up(queryRunner: QueryRunner): Promise<void> {
+export class SeedPokemon1725037443778 implements MigrationInterface {
+    public async up(queryRunner: QueryRunner): Promise<void> {
         // elimina los registros existentes (si existen)
         await queryRunner.query(`
-          DELETE FROM pokemon WHERE id IN ('pokemon-1', 'pokemon-2', 'pokemon-3', 'pokemon-4', 'pokemon-5', 'pokemon-6');
+          DELETE FROM pokemon WHERE id IN ('pokemon-1', 'pokemon-2', 'pokemon-3', 'pokemon-4', 'pokemon-5');
         `);
-  
-        //inserta los datos
+
+        // inserta los datos
         await queryRunner.query(`
           INSERT INTO pokemon (id, name, attack, defense, hp, speed, type, imageUrl)
           VALUES
@@ -16,13 +16,19 @@ import { MigrationInterface, QueryRunner } from "typeorm";
           ('pokemon-3', 'Squirtle', 3, 4, 3, 3, 'Water', 'https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/007.png'),
           ('pokemon-4', 'Bulbasaur', 4, 3, 3, 3, 'Grass', 'https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/001.png'),
           ('pokemon-5', 'Eevee', 4, 3, 4, 5, 'Normal', 'https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/133.png')
-          ('pokemon-6', 'Hitmonchan', 4, 3, 3, 6, 'Figth', 'https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/107.png')
         `);
-      }
-  
-      public async down(queryRunner: QueryRunner): Promise<void> {
+    }
+
+    public async down(queryRunner: QueryRunner): Promise<void> {
+        // Primero elimina las batallas que hacen referencia a los Pokémon
         await queryRunner.query(`
-          DELETE FROM pokemon WHERE id IN ('pokemon-1', 'pokemon-2', 'pokemon-3', 'pokemon-4', 'pokemon-5', 'pokemon-6');
+          DELETE FROM battle WHERE pokemon1Id IN ('pokemon-1', 'pokemon-2', 'pokemon-3', 'pokemon-4', 'pokemon-5')
+          OR pokemon2Id IN ('pokemon-1', 'pokemon-2', 'pokemon-3', 'pokemon-4', 'pokemon-5');
         `);
-      }
-  }  
+
+        // Luego elimina los Pokémon
+        await queryRunner.query(`
+          DELETE FROM pokemon WHERE id IN ('pokemon-1', 'pokemon-2', 'pokemon-3', 'pokemon-4', 'pokemon-5');
+        `);
+    }
+}

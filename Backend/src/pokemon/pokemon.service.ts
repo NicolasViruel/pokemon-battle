@@ -24,7 +24,7 @@ export class PokemonService implements OnModuleInit {
                 "defense": 3,
                 "hp": 3,
                 "speed": 6,
-                "type": "Type",
+                "type": "Electric",
                 "imageUrl": "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/025.png"
               },
               {
@@ -34,7 +34,7 @@ export class PokemonService implements OnModuleInit {
                 "defense": 3,
                 "hp": 3,
                 "speed": 4,
-                "type": "Type",
+                "type": "Fire",
                 "imageUrl": "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/004.png"
               },
               {
@@ -44,7 +44,7 @@ export class PokemonService implements OnModuleInit {
                 "defense": 4,
                 "hp": 3,
                 "speed": 3,
-                "type": "Type",
+                "type": "Water",
                 "imageUrl": "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/007.png"
               },
               {
@@ -54,7 +54,7 @@ export class PokemonService implements OnModuleInit {
                 "defense": 3,
                 "hp": 3,
                 "speed": 3,
-                "type": "Type",
+                "type": "Grass",
                 "imageUrl": "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/001.png"
               },
               {
@@ -64,7 +64,7 @@ export class PokemonService implements OnModuleInit {
                 "defense": 3,
                 "hp": 4,
                 "speed": 5,
-                "type": "Type",
+                "type": "Normal",
                 "imageUrl": "https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/133.png"
               }
             ]
