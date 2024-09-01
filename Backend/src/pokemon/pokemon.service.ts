@@ -14,7 +14,7 @@ export class PokemonService implements OnModuleInit {
         @InjectRepository(Pokemon)
         private pokemonRepository: Repository<Pokemon>,
     ) {}
-
+    //mi semilla
     async seedPokemon() {
         const pokemons = [
             {
